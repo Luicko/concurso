@@ -1,0 +1,11 @@
+db_*
+*.pyc
+env/
+build/
+data/
+.coverage
+.coverage.*
+instance/
+docs/_build/
+venv/
+ENV/
