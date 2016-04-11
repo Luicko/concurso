@@ -1,17 +1,17 @@
 import csv
 
 from . import app, db
-from .models import Cliente, Disco, Interprete
+from .models import User, Songs, Artist
 
 
-def follow(interprete, usuario):
+def follow(Artist, usuario):
 	follow_file = open('/following/',usuario.id,'.csv','a')
-	follow_file.write("",interprete.id," ")
+	follow_file.write("",Artist.id," ")
 	follow_file.close()
 
-def unfollow(usuario, interprete):
+def unfollow(usuario, Artist):
 	following = read_follow(usuario)
-	following.remove(str(interprete))
+	following.remove(str(Artist))
 	os.remove('',usuario.id,'.csv')
 	follow_file = open('/following/',usuario.id,'.csv','a')
 	for x in range(len(following)):
@@ -30,40 +30,13 @@ def read_follow(usuario):
 	except IOError:
 		return None
 
-
-def select_follow(fal):
-	select = []
-	for x in range(len(fal)):
-		select.append(Interprete.query.filter_by(id=int(fal[x])).first())
-	return select
-
-def all_inter():
-	inter = Interprete
-	select = inter.query.all()
-	return select
-
-def all_discs():
-	disc = Disco
-	select = disc.query.all()
-	return select
-
-def one_inter(interprete):
-	inter = Interprete
-	select = inter.query.filter_by(idinterprete=interprete).first()
-	return select
-
-def one_disc(disco):
-	disc = Disco
-	select = disc.query.filter_by(iddisco=disco).first()
-	return select
-
 def set_score(user, score, disc):
-	x = models.Puntuacion.query.filter(idcliente=user.id, iddisco=disc.id).first()
+	x = models.Puntuacion.query.filter(idUser=user.id, idSongs=disc.id).first()
 	if x:
 		j = x(Puntuacion=score)
 		db.session.add(j)
 		db.session.commit()
 	else:
-		x = models.Puntuacion(idcliente=user.id, iddisco=disc.id, puntuacion=score)
+		x = models.Puntuacion(idUser=user.id, idSongs=disc.id, puntuacion=score)
 		db.session.add(x)
 		db.session.commit()

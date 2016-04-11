@@ -1,37 +1,29 @@
+{% extends "bootstrap/base.html" %}
 <!DOCTYPE html>
 <html lang="eng">
+{% block head %}
 	<head>
 	<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('.static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="../static/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="../static/css/styles.css">
+    <script src="{{ url_for('.static', filename='js/bootstrap.min.js') }}"></script>
+    <link rel="stylesheet" href="{{url_for('.static', filename='css/styles.css')}} ">
     <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-    <script src="../static/js/script.js"></script>
-    <script>
-    	$(':radio').change(
-		  function(){
-		    $('.choice').text( this.value + ' stars' );
-		  } 
-		)
+    <script src=" {{ url_for('.static', filename='js/script.js') }}"></script>
+
+    <script type='text/javascript'>
+
+     $(document).ready(function() { 
+       $('input[name=rating]').change(function(){
+            $('form').submit();
+       });
+      });
+
     </script>
-    <script>
-		 $(document).ready(function() { 
-		   $('input[name=rating]').change(function(){
-		        $('form').submit();
-		   });
-		  });
-	</script>
 
-    <style type="text/css">
-		.slider{
-		  width: 100%;
-		  height: 300px;
-		}
-	</style>
-
+    
 
 	{% if title %}
 		<title>{{title}} - SoundMedia</title>
@@ -39,8 +31,9 @@
 		<title>Welcome to SoundMedia</title>
 	{% endif %}
 	</head>
+  {% endblock %}
 	<body>
-	
+	{% block navbar %}
 	<nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -67,13 +60,18 @@
       {% if g.user.is_authenticated %}
         <div id='cssmenu'>
         <ul class="active">
-           <li class='has-sub'><a href='#'>{{ user.nombre }}</a>
+           <li class='has-sub'><a href='#'>{{ g.user.name }}</a>
               <ul>
                  <li><a href='#'>Edit Profile</a></li>
                  <li class='has-sub'><a href=''>Following</a>
                     <ul>
-                    <li><a href='#'>INTERPRETE</a></li>
-                    <li><a href='#'>INTERPRETE</a></li>
+                    {% for id in follow_list %}
+                    {% for artist in artist_list %}
+                    {% if id == artist.id  %}
+                    <li><a href='#'>{{ artist.name }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
                     <ul>
                     </ul>
                  </li>
@@ -87,13 +85,13 @@
       </ul>
       <ul class="nav navbar-nav">
         <li><a href="{{ url_for('index') }}">Welcome <span class="sr-only"></span></a></li>
-        <li><a href="#">Songs<span class="sr-only"></span></a></li>
-        <li><a href="#">Singer<span class="sr-only"></span></a></li>
+        <li><a href="{{ url_for('songs') }}">Songs<span class="sr-only"></span></a></li>
+        <li><a href="{{ url_for('artists') }}">Singer<span class="sr-only"></span></a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-
-		{% block content %}{% endblock %}
+{% endblock %}
+		{% block content %} {% endblock %}
 	</body>
 </html>

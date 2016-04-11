@@ -16,16 +16,16 @@ Discotipo = db.Table('discotipo',
 	db.Column('idtipo', db.Integer, db.ForeignKey('tipo.idtipo')))
 
 
-class Cliente(db.Model):
+class User(db.Model):
 	__tablename__ = 'cliente'
 
 	id = db.Column(db.Integer, primary_key=True)
-	nombre = db.Column(db.String(255), index=True)
-	email = db.Column(db.String(255), index=True, unique=True)
-	fechanacimiento = db.Column(db.DateTime)
-	fecharegistro = db.Column(db.DateTime)
+	name = db.Column('nombre', db.String(255), index=True)
+	email = db.Column('email', db.String(255), index=True, unique=True)
+	birthday = db.Column('fechanacimiento', db.DateTime)
+	signindate = db.Column('fecharegistro', db.DateTime)
 
-	score = db.relationship('Disco', secondary=Puntuacion, 
+	score = db.relationship('Songs', secondary=Puntuacion, 
 		backref=db.backref('clientes', lazy='dynamic'))
 
 	@property
@@ -47,7 +47,7 @@ class Cliente(db.Model):
 			return str(self.id)
 
 	def __repr__(self):
-		return '<User %r>' % (self.nombre)
+		return '<User %r>' % (self.name)
 
         def follow(self, interprete):
             pass
@@ -68,35 +68,47 @@ class Cliente(db.Model):
 		return new_nickname
 
 
-class Interprete(db.Model):
+class Artist(db.Model):
 	__tablename__ = 'interprete'
 
-	interprete = db.Column(db.String(255), index=True)
-	idinterprete = db.Column(db.Integer, primary_key=True)
+	name = db.Column('interprete', db.String(255), index=True)
+	id = db.Column('idinterprete', db.Integer, primary_key=True)
 
-	discs = db.relationship('Disco', backref='interprete', lazy='dynamic')
+	discs = db.relationship('Songs', backref='author', lazy='dynamic')
+
+	def retrieve(self):
+		return self.query.all()
 
 
-class Disco(db.Model):
+class Songs(db.Model):
 	__tablename__ = 'disco'
 
 	id = db.Column('iddisco', db.Integer, primary_key=True)
 	title = db.Column('titulo', db.String(255))
-	agno = db.Column(db.Float)
-	idinterprete = db.Column(db.Integer, db.ForeignKey('interprete.idinterprete'))
+	year = db.Column('agno', db.Float)
+	idart = db.Column('idinterprete', 	db.Integer, db.ForeignKey('interprete.idinterprete'))
 
-	genre = db.relationship('Tipo', secondary=Discotipo, 
+	genre = db.relationship('Genre', secondary=Discotipo, 
 		backref=db.backref('discos', lazy='dynamic'))
 
+	def retrieve(self):
+		return Songs.query.all()
 
-class Tipo(db.Model):
+	def act(self, var):
+		return self.query.filter_by(id=var).first()
+
+	def __repr__(self):
+		return '<Disco %r>' % self.title
+
+
+class Genre(db.Model):
 	__tablename__ = 'tipo'
 
-	idtipo = db.Column(db.Integer, primary_key=True)
-	tipo = db.Column(db.String, unique=True)
+	id = db.Column('idtipo', db.Integer, primary_key=True)
+	genre = db.Column('tipo', db.String, unique=True)
 
         def __html__(self):
-            return unicode(self.tipo)
+            return unicode(self.genre)
 
         def __repr__(self):
-            return "<{} '{}'>".format(self.__class__.__name__, self.tipo)
+            return "<{} '{}'>".format(self.__class__.__name__, self.genre)

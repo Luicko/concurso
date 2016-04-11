@@ -1,34 +1,34 @@
 import datetime
+import csv
 
-from flask import render_template, redirect, url_for, request, g, flash
+from flask import render_template, redirect, url_for, request, g, flash, request
 from flask.ext.login import (login_user, logout_user, current_user,
     login_required
     )
+from sqlalchemy import select
 
 from . import app, db, lm
 from . import utils
-from .models import Cliente, Disco, Interprete
+from .models import *
 from .forms import Regist_Form, Login_Form
 
 
-@app.before_request
-def before_request():
-	g.user = current_user
-
-@lm.user_loader
-def load_user(id):
-	return Cliente.query.get(int(id))
-
-@app.route('/', methods=['GET', 'POST'])
-@app.route('/index', methods=['GET', 'POST'])
+@app.route('/')
+@app.route('/index')
 def index():
 	import random
 	user = g.user
-	news = utils.all_discs()
+	news = Songs.query.all()
 	random.shuffle(news)
 	slide = news[0:7]
+	if g.user.is_authenticated:
+		follow_list = read_follow()
+	else:
+		follow_list = []
+	artist_list = Artist.query.all()
 	return render_template('index.html', title='Main', user=user, 
-		news=news, slide=slide)
+		news=news, slide=slide, follow_list=follow_list, artist_list=artist_list)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -36,7 +36,7 @@ def login():
 		return redirect(url_for('index'))
 	form = Login_Form()
 	if form.validate_on_submit():
-		u = Cliente.query.filter_by(email=form.email.data).first()
+		u = User.query.filter_by(email=form.email.data).first()
 		if not u:
 			flash('Error al iniciar sesion')
 			return redirect(url_for('login'))
@@ -45,6 +45,7 @@ def login():
 			return redirect(url_for('index'))
 	return render_template('login.html', form=form)
 
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
 	form = Regist_Form()
@@ -52,13 +53,14 @@ def signup():
 		return redirect(url_for('index'))
 	form = Regist_Form()
 	if form.validate_on_submit():
-		u = Cliente(email=form.email.data, nombre=form.nickname.data, 
-			fecharegistro=datetime.datetime.utcnow(), fechanacimiento=form.birthday.data)
+		u = User(email=form.email.data, name=form.nickname.data, 
+			signindate=datetime.datetime.utcnow(), birthday=form.birthday.data)
 		db.session.add(u)
 		db.session.commit()
 		flash('Welcome!')
 		return redirect(url_for('login'))
 	return render_template('signup.html', form=form, title='Join')
+
 
 @app.route('/logout')
 def logout():
@@ -66,38 +68,78 @@ def logout():
 	return redirect(url_for('index'))
 
 
-@app.route('/interprete')
-def interpretes():
-	inter_list = utils.all_inter()
-	return render_template('interprete.html', inter_list=inter_list)
+@app.route('/artist')
+def artists():
+	artist_list = Artist.query.all()
+	return render_template('artists.html', artist_list=artist_list)
 
-@app.route('/inter/<interprete>')
-def inter(interprete):
-	act_inter = utils.one_inter(interprete)
-	return render_template('inter.html', title=act_inter.interprete,
-	 act_inter=act_inter)
-	
-@app.route('/user/<user>')
-def test(usuario):
-	follow = read_follow(usuario)
-	following = select_follow(x)
-	usu = usuario
-	return render_template('usuario.html', title=usu.nickname, 
-		following=following, usu=usu)
 
-@app.route('/discos')
-def discos():
-	disc_list = utils.all_discs
-	return render_template('discos.html', disc_list=disc_list)
+@app.route('/songs')
+def songs():
+	song_list = Songs.query.all()
+	genre_list = Genre.query.all()
+	artist_list = Artist.query.all()
+	return render_template('songs.html', song_list=song_list, genre_list=genre_list)
 
-@app.route('/disc/<discos>')
-def disc(discos):
-	name = disco.titulo
-	act_disc = utils.one_disc(disco)
-	return render_template('disc.html', title=act_disc.titulo, act_disc=act_disc)
 
-@app.route('/score', methods=['GET', 'POST'])
-def score(points, disco):
+@app.route('/songs/<id>/<songs>')
+def song(id, songs):
 	user = g.user
-	utils.set_score(user=user, score=points, disc=disco)
-	pass
+	act_song = Songs.query.filter_by(id=id).first()
+	year = int(act_song.year)
+	if g.user.is_authenticated:
+		if act_song in g.user.score:
+			select = select([Puntuacion.c.puntuacion]).where(Puntuacion.c.idcliente == g.user.id)\
+			.where(Puntuacion.c.iddisco==act_song.id)
+			result = db.session.execute(final)
+			for row in result:
+				score = row[0]
+		else:
+			score = 100
+	score = 100
+	return render_template('song.html', title=act_song.title, act_song=act_song,
+		year=year, score=score, user=user)
+
+
+@app.route('/set_score', methods=['GET', 'POST'])
+def set_score():
+	score = request.form.get('rating')
+	song = request.form.get('song')
+	##FALTA REVISION
+	exe = Puntuacion.insert().values(iddisco=song, puntuacion=score,
+			idcliente=g.user.id,
+			fecha=datetime.datetime.utcnow())
+	db.session.execute(exe)
+	db.session.commit()
+	return 'Done'
+
+
+@app.route('/follow', methods=['GET','POST'])
+def follow(artist):
+	follow_file = open('.static/following/',usuario.id,'.csv','a')
+	follow_file.write("",artist.id," ")
+	follow_file.close()
+
+
+@app.route('/unfollow', methods=['GET', 'POST'])
+def unfollow(artist):
+	following = read_follow(usuario)
+	following.remove(str(artist))
+	os.remove('',usuario.id,'.csv')
+	follow_file = open('.static/following/',usuario.id,'.csv','a')
+	for x in range(len(following)):
+		follow_file.write("",following[x]," ")
+	follow_file.close()
+	return 'Done'
+
+
+def read_follow():
+	follow = []
+	try:
+		with open('.static/following/'+str(g.user.id)+'.csv', 'rb') as csvfile:
+			spamreader = csv.reader(csvfile, delimiter=' ')
+			for row in spamreader:
+				follow = row
+		return follow
+	except IOError:
+		return follow

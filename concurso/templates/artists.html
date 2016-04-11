@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+
+</br></br></br></br>
+<div class="container">
+{% for artist in artist_list %}
+<div class="modal fade" id="{{ artist.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">{{ artist.name }}</h4>
+				</div>
+				<div class="modal-body">
+				<table>
+					{% for song in artist.discs %}
+						<tr>
+							<td><a href="{{ url_for('song', id=song.id, songs=song.title) }}">{{ song.title }} </a></td>
+						</tr>
+					{% endfor %}
+				</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+<table class="table">
+	<tr>
+		<th>
+			List of Artists
+		</th>
+	</tr>
+	{% for artist in artist_list %}
+	<tr>
+		<td><button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#{{ artist.id }}">
+			{{ artist.name }}
+		</button></td>
+	</tr>
+	{% endfor %}
+</table>
+</div>
+
+{% endblock %}
