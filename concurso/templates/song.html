@@ -2,35 +2,49 @@
 
 {% set title = "Songs" %}
 
+{% block head %}
+{{ super() }}
+    <script type='text/javascript'>
+
+     $(document).ready(function() {
+         $('input[name=rating]').change(function(){
+              $('form').submit();
+         });
+      });
+
+    </script>
+{% endblock %}
+
 {% block content %}
-</br></br></br></br>
 <div class="container">
-<div class="row">
-	<div class="col-md-6">
-		<h2>{{ act_song.title }}<small> -     {{ year }}</small></h2>
-	</div>
-	</div>
-	<div class="cold-md-3">
-		<img class="img-circle slider" src="{{ url_for('.static', filename='media/') }}{{ act_song.id }}.jpg ">	
-	</div>
-	{% if current_user.is_authenticated %}
-	<span class="star-rating">
-	<form class="points" action="{{ url_for('set_score') }}" method="get">
-		<input type="radio" name="rating" {% if score<=2 %} checked {% endif %} value="2"><i></i>
-		<input type="radio" name="rating" {% if score<=4 %} checked {% endif %} value="4"><i></i>
-		<input type="radio" name="rating" {% if score<=6 %} checked {% endif %} value="6"><i></i>
-		<input type="radio" name="rating" {% if score<=8 %} checked {% endif %} value="8"><i></i>
-		<input type="radio" name="rating" {% if score<=10 %} checked {% endif %} value="10"><i></i>
-		<input type="hidden" name="song" value="{{ act_song.id }}"/>
-	</form>
-	</span>
-	<strong class="choice">Choose a rating</strong>
-	</div>
-	{% else %}
-	<div class="row">
-		<div class="col-md-6">
-			<h3>Want to rate it? <a href=" {{url_for('login')}} ">SIGN IN!</a></h3>
-		</div>
-	</div>
-	{% endif %}
+    <div class="row">
+        <div class="col-md-6">
+            <h2>{{ act_song.title }}<small> - {{ year }}</small></h2>
+        </div>
+        </div>
+        <div class="col-md-3">
+            <img class="img-circle slider" src="{{ url_for('.static', filename='media/') }}{{ act_song.id }}.jpg">
+        </div>
+        {% if current_user.is_authenticated %}
+        <span class="star-rating">
+        <form class="points" action="{{ url_for('set_score') }}" method="get">
+            <input type="radio" name="rating" {% if score<=2 %} checked {% endif %} value="2"><i></i>
+            <input type="radio" name="rating" {% if score<=4 %} checked {% endif %} value="4"><i></i>
+            <input type="radio" name="rating" {% if score<=6 %} checked {% endif %} value="6"><i></i>
+            <input type="radio" name="rating" {% if score<=8 %} checked {% endif %} value="8"><i></i>
+            <input type="radio" name="rating" {% if score<=10 %} checked {% endif %} value="10"><i></i>
+            <input type="hidden" name="song" value="{{ act_song.id }}"/>
+        </form>
+        </span>
+        <strong class="choice">Choose a rating</strong>
+        </div>
+        {% else %}
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Want to rate it? <a href="{{ url_for('login') }}">SIGN IN!</a></h3>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

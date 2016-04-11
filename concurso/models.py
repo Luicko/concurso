@@ -61,9 +61,6 @@ class Songs(db.Model):
     genre = db.relationship('Genre', secondary=Discotipo,
         backref=db.backref('discos', lazy='dynamic'))
 
-    def act(self, var):
-        return self.query.filter_by(id=var).first()
-
     def __repr__(self):
         return '<Disco %r>' % self.title
 

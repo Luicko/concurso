@@ -1,13 +1,8 @@
+{% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
+
 {% block content %}
-</br></br></br></br>
 <div class="container">
-<form action="" method="post" name="signup">
-    {{ form.hidden_tag() }}
-    New Email: {{ form.email }}
-    Your Nickname: {{ form.nickname }}
-    Birthday: {{ form.birthday(type="date") }}
-    <input type="submit" value="Sign Up"/>
-</form>
+{{ wtf.quick_form(form, button_map={'submit': 'primary'}) }}
 </div>
 {% endblock %}
