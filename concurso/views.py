@@ -8,7 +8,6 @@ from flask.ext.login import (login_user, logout_user, current_user,
 from sqlalchemy import select
 
 from . import app, db, lm
-from . import utils
 from .models import *
 from .forms import Regist_Form, Login_Form
 
@@ -17,7 +16,7 @@ from .forms import Regist_Form, Login_Form
 @app.route('/index')
 def index():
 	import random
-	news = Songs.query.all()
+	news = Song.query.all()
 	random.shuffle(news)
 	slide = news[0:7]
 	if current_user.is_authenticated:
@@ -75,7 +74,7 @@ def artists():
 
 @app.route('/songs')
 def songs():
-	song_list = Songs.query.all()
+	song_list = Song.query.all()
 	genre_list = Genre.query.all()
 	artist_list = Artist.query.all()
 	return render_template('songs.html', song_list=song_list, genre_list=genre_list)
@@ -83,7 +82,7 @@ def songs():
 
 @app.route('/songs/<id>/<songs>')
 def song(id, songs):
-	act_song = Songs.query.filter_by(id=id).first()
+	act_song = Song.query.filter_by(id=id).first()
 	year = int(act_song.year)
 	if current_user.is_authenticated:
 		if act_song in current_user.score:
