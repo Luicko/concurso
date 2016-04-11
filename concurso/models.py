@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+from flask.ext.login import UserMixin
+
 from . import db
 
 
@@ -17,7 +19,7 @@ Discotipo = db.Table('discotipo',
     db.Column('idtipo', db.Integer, db.ForeignKey('tipo.idtipo')))
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = 'cliente'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -28,18 +30,6 @@ class User(db.Model):
 
     score = db.relationship('Songs', secondary=Puntuacion,
         backref=db.backref('clientes', lazy='dynamic'))
-
-    @property
-    def is_authenticated(self):
-        return True
-
-    @property
-    def is_active(self):
-        return True
-
-    @property
-    def is_anonymous():
-        return False
 
     def __repr__(self):
         return '<User %r>' % (self.name)

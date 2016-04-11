@@ -15,9 +15,9 @@ lm.init_app(app)
 lm.login_view = 'login'
 
 
+from . import views, models
+
+
 @lm.user_loader
 def load_user(id):
-	return User.query.get(int(id))
-
-
-from . import views, models
+	return models.User.query.get(int(id))
