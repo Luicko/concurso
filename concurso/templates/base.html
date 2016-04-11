@@ -54,20 +54,7 @@
            <li class='has-sub'><a href='#'>{{ current_user.name }}</a>
               <ul>
                  <li><a href='#'>Edit Profile</a></li>
-                 <li class='has-sub'><a href=''>Following</a>
-                    <ul>
-                    {% for id in follow_list %}
-                    {% for artist in artist_list %}
-                    {% if id == artist.id  %}
-                    <li><a href='#'>{{ artist.name }}</a></li>
-                    {% endif %}
-                    {% endfor %}
-                    {% endfor %}
-                    <ul>
-                    </ul>
-                 </li>
-                    </ul>
-                 </li>
+                 <li class='has-sub'><a href=''>Following</a></li>
               </ul>
            </li>
         </ul>

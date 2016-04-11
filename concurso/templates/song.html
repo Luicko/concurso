@@ -2,13 +2,16 @@
 
 {% set title = "Songs" %}
 
-{% block head %}
+{% block scripts %}
 {{ super() }}
     <script type='text/javascript'>
 
-     $(document).ready(function() {
+     $(function() {
          $('input[name=rating]').change(function(){
-              $('form').submit();
+            $.post("{{ url_for('set_score') }}", {
+                song_id: {{ act_song.id }},
+                score: $('input[name=rating]').val()
+            });
          });
       });
 
@@ -27,14 +30,11 @@
         </div>
         {% if current_user.is_authenticated %}
         <span class="star-rating">
-        <form class="points" action="{{ url_for('set_score') }}" method="get">
             <input type="radio" name="rating" {% if score<=2 %} checked {% endif %} value="2"><i></i>
             <input type="radio" name="rating" {% if score<=4 %} checked {% endif %} value="4"><i></i>
             <input type="radio" name="rating" {% if score<=6 %} checked {% endif %} value="6"><i></i>
             <input type="radio" name="rating" {% if score<=8 %} checked {% endif %} value="8"><i></i>
             <input type="radio" name="rating" {% if score<=10 %} checked {% endif %} value="10"><i></i>
-            <input type="hidden" name="song" value="{{ act_song.id }}"/>
-        </form>
         </span>
         <strong class="choice">Choose a rating</strong>
         </div>
