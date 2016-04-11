@@ -44,10 +44,8 @@
 		
 		</div>
 		</div>
-	
 
-
-	{% if g.user.is_authenticated %}
+	{% if current_user.is_authenticated %}
 	{% else %}
 	<div class="col-md-4 col-md-offset-5">
 	<a href="{{ url_for('signup') }}"><button type="button" class="btn btn-primary btn-lg">

@@ -10,7 +10,7 @@
 	<div class="cold-md-3">
 		<img class="img-circle slider" src="{{ url_for('.static', filename='media/') }}{{ act_song.id }}.jpg ">	
 	</div>
-	{% if g.user.is_authenticated %}
+	{% if current_user.is_authenticated %}
 	<span class="star-rating">
 	<form class="points" action="{{ url_for('set_score') }}" method="get">
 		<input type="radio" name="rating" {% if score<=2 %} checked {% endif %} value="2"><i></i>

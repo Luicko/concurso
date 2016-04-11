@@ -47,7 +47,7 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-    {% if g.user.is_authenticated %}
+    {% if current_user.is_authenticated %}
       <form class="navbar-form navbar-right" role="search">
         <a href="{{ url_for('logout') }}"><button type="button" class="btn btn-default">Log Out</button></a>
       </form>
@@ -57,10 +57,10 @@
       </form>
     {% endif %}
       <ul class="nav navbar-nav navbar-left">
-      {% if g.user.is_authenticated %}
+      {% if current_user.is_authenticated %}
         <div id='cssmenu'>
         <ul class="active">
-           <li class='has-sub'><a href='#'>{{ g.user.name }}</a>
+           <li class='has-sub'><a href='#'>{{ current_user.name }}</a>
               <ul>
                  <li><a href='#'>Edit Profile</a></li>
                  <li class='has-sub'><a href=''>Following</a>

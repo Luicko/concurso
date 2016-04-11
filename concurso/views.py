@@ -17,22 +17,21 @@ from .forms import Regist_Form, Login_Form
 @app.route('/index')
 def index():
 	import random
-	user = g.user
 	news = Songs.query.all()
 	random.shuffle(news)
 	slide = news[0:7]
-	if g.user.is_authenticated:
+	if current_user.is_authenticated:
 		follow_list = read_follow()
 	else:
 		follow_list = []
 	artist_list = Artist.query.all()
-	return render_template('index.html', title='Main', user=user, 
+	return render_template('index.html', title='Main',
 		news=news, slide=slide, follow_list=follow_list, artist_list=artist_list)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-	if g.user is not None and g.user.is_authenticated:
+	if current_user is not None and current_user.is_authenticated:
 		return redirect(url_for('index'))
 	form = Login_Form()
 	if form.validate_on_submit():
@@ -49,7 +48,7 @@ def login():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
 	form = Regist_Form()
-	if g.user is not None and g.user.is_authenticated:
+	if current_user is not None and current_user.is_authenticated:
 		return redirect(url_for('index'))
 	form = Regist_Form()
 	if form.validate_on_submit():
@@ -84,12 +83,11 @@ def songs():
 
 @app.route('/songs/<id>/<songs>')
 def song(id, songs):
-	user = g.user
 	act_song = Songs.query.filter_by(id=id).first()
 	year = int(act_song.year)
-	if g.user.is_authenticated:
-		if act_song in g.user.score:
-			select = select([Puntuacion.c.puntuacion]).where(Puntuacion.c.idcliente == g.user.id)\
+	if current_user.is_authenticated:
+		if act_song in current_user.score:
+			select = select([Puntuacion.c.puntuacion]).where(Puntuacion.c.idcliente == current_user.id)\
 			.where(Puntuacion.c.iddisco==act_song.id)
 			result = db.session.execute(final)
 			for row in result:
@@ -98,7 +96,7 @@ def song(id, songs):
 			score = 100
 	score = 100
 	return render_template('song.html', title=act_song.title, act_song=act_song,
-		year=year, score=score, user=user)
+		year=year, score=score)
 
 
 @app.route('/set_score', methods=['GET', 'POST'])
@@ -107,7 +105,7 @@ def set_score():
 	song = request.form.get('song')
 	##FALTA REVISION
 	exe = Puntuacion.insert().values(iddisco=song, puntuacion=score,
-			idcliente=g.user.id,
+			idcliente=current_user.id,
 			fecha=datetime.datetime.utcnow())
 	db.session.execute(exe)
 	db.session.commit()
@@ -136,7 +134,7 @@ def unfollow(artist):
 def read_follow():
 	follow = []
 	try:
-		with open('.static/following/'+str(g.user.id)+'.csv', 'rb') as csvfile:
+		with open('.static/following/'+str(current_user.id)+'.csv', 'rb') as csvfile:
 			spamreader = csv.reader(csvfile, delimiter=' ')
 			for row in spamreader:
 				follow = row
