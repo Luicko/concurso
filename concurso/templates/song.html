@@ -10,7 +10,7 @@
          $('input[name=rating]').change(function(){
             $.post("{{ url_for('set_score') }}", {
                 song_id: {{ act_song.id }},
-                score: $('input[name=rating]').val()
+                score: $(this).val()
             });
          });
       });
@@ -27,14 +27,16 @@
         </div>
         <div class="col-md-3">
             <img class="img-circle slider" src="{{ url_for('.static', filename='media/') }}{{ act_song.id }}.jpg">
+            {{ score }}
         </div>
         {% if current_user.is_authenticated %}
         <span class="star-rating">
-            <input type="radio" name="rating" {% if score<=2 %} checked {% endif %} value="2"><i></i>
-            <input type="radio" name="rating" {% if score<=4 %} checked {% endif %} value="4"><i></i>
-            <input type="radio" name="rating" {% if score<=6 %} checked {% endif %} value="6"><i></i>
-            <input type="radio" name="rating" {% if score<=8 %} checked {% endif %} value="8"><i></i>
-            <input type="radio" name="rating" {% if score<=10 %} checked {% endif %} value="10"><i></i>
+            <input type="radio" name="rating" {% if score==2 or score==1 %} checked {% endif %} value="2"><i></i>
+            <input type="radio" name="rating" {% if score==4 or score==3 %} checked {% endif %} value="4"><i></i>
+            <input type="radio" name="rating" {% if score==6 or score==5 %} checked {% endif %} value="6"><i></i>
+            <input type="radio" name="rating" {% if score==8 or score==7 %} checked {% endif %} value="8"><i></i>
+            <input type="radio" name="rating" {% if score==10 or score==9 %} checked {% endif %} value="10"><i></i>
+
         </span>
         <strong class="choice">Choose a rating</strong>
         </div>

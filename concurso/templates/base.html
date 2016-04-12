@@ -1,30 +1,28 @@
 {% extends "bootstrap/base.html" %}
 
-{% set title = "Welcome to SoundMedia" %}
+{% set title='Main' %}
 
-{% block styles %}
-{{ super () }}
-<link rel="stylesheet" href="{{url_for('.static', filename='css/styles.css')}} ">
+{% block scripts %} 
+{{ super() }}
+<script src="{{ url_for('.static', filename='js/script.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('.static', filename='js/jquery.dynatable.js') }}"></script>
 {% endblock %}
 
-{% block scripts %}
-{{ super () }}
-<script src=" {{ url_for('.static', filename='js/script.js') }}"></script>
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{url_for('.static', filename='css/styles.css')}}">
+<link rel="stylesheet" href="{{url_for('.static', filename='css/jquery.dynatable.css')}}">
 {% endblock %}
 
 {% block head %}
-{{ super () }}
+{{ super() }}
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 {% endblock %}
 
-{% block title %}
-{{ title }}
-{% endblock %}
-
 {% block navbar %}
-<nav class="navbar navbar-default navbar-fixed-top">
+  <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -53,8 +51,33 @@
         <ul class="active">
            <li class='has-sub'><a href='#'>{{ current_user.name }}</a>
               <ul>
-                 <li><a href='#'>Edit Profile</a></li>
-                 <li class='has-sub'><a href=''>Following</a></li>
+                 <li class='has-sub'><a href=''>Following</a>
+                    <ul>
+                    {% for song in g.scored %}
+                    <li class='has-sub'><a href='#'>A-F</a>
+                    <ul>{% for x in range(5) %}
+                      <li><a href="{{ url_for('song', id=song.id) }}">{{ song.title }} <span class="glyphicon glyphicon-heart" aria-hidden="true"></span></a></li>
+                    {% endfor %}</ul>
+                    </li>
+                    <li class='has-sub'><a href='#'>G-M</a>
+                    <ul>{% for x in range(5) %}
+                      <li><a href="{{ url_for('song', id=song.id) }}">{{ song.title }} <span class="glyphicon glyphicon-heart" aria-hidden="true"></span></a></li>
+                    {% endfor %}</ul>
+                    </li>
+                    <li class='has-sub'><a href='#'>N-S</a>
+                    <ul>{% for x in range(5) %}
+                      <li><a href="{{ url_for('song', id=song.id) }}">{{ song.title }} <span class="glyphicon glyphicon-heart" aria-hidden="true"></span></a></li>
+                    {% endfor %}</ul>
+                    </li>{% for x in range(5) %}
+                    <li class='has-sub'><a href='#'>U-Z</a>
+                    <ul>
+                      <li><a href="{{ url_for('song', id=song.id) }}">{{ song.title }} <span class="glyphicon glyphicon-heart" aria-hidden="true"></span></a></li>
+                    {% endfor %}</ul>
+                    </li>
+                    {% endfor %}
+                 </li>
+                    </ul>
+                 </li>
               </ul>
            </li>
         </ul>
@@ -62,12 +85,12 @@
         {% endif %}
       </ul>
       <ul class="nav navbar-nav">
-        <li><a href="{{ url_for('index') }}">Welcome <span class="sr-only"></span></a></li>
+        <li><a href="{{ url_for('index') }}">Home<span class="sr-only"></span></a></li>
         <li><a href="{{ url_for('songs') }}">Songs<span class="sr-only"></span></a></li>
-        <li><a href="{{ url_for('artists') }}">Singer<span class="sr-only"></span></a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-<br><br><br>
+
+<br><br><br><br><br><br>
 {% endblock %}

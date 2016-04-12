@@ -6,13 +6,13 @@ from . import db
 
 
 class User(db.Model, UserMixin):
-    __tablename__ = 'cliente'
+    __tablename__ = 'Cliente'
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column('nombre', db.String(255), index=True)
-    email = db.Column('email', db.String(255), index=True, unique=True)
-    birthday = db.Column('fechanacimiento', db.DateTime)
-    signindate = db.Column('fecharegistro', db.DateTime)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column('Nombre', db.String(255), index=True)
+    email = db.Column('Email', db.String(255), index=True, unique=True)
+    birthday = db.Column('FechaNacimiento', db.DateTime)
+    signindate = db.Column('FechaRegistro', db.DateTime)
 
     def __repr__(self):
         return '<User %r>' % (self.name)
@@ -25,30 +25,30 @@ class User(db.Model, UserMixin):
 
 
 class Artist(db.Model):
-    __tablename__ = 'interprete'
+    __tablename__ = 'Interprete'
 
-    name = db.Column('interprete', db.String(255), index=True)
-    id = db.Column('idinterprete', db.Integer, primary_key=True)
+    name = db.Column('Interprete', db.String(255), index=True)
+    id = db.Column('IdInterprete', db.Integer, primary_key=True)
 
     discs = db.relationship('Song', backref='author', lazy='dynamic')
 
 
-disc_type_table = db.Table('discotipo',
-    db.Column('id', db.Integer, primary_key=True),
-    db.Column('iddisco', db.Integer, db.ForeignKey('disco.iddisco')),
-    db.Column('idtipo', db.Integer, db.ForeignKey('tipo.idtipo')))
+disc_type_table = db.Table('DiscoTipo',
+    db.Column('Id', db.Integer, primary_key=True),
+    db.Column('IdDisco', db.Integer, db.ForeignKey('Disco.IdDisco')),
+    db.Column('IdTipo', db.Integer, db.ForeignKey('Tipo.IdTipo')))
 
 
 class Song(db.Model):
-    __tablename__ = 'disco'
+    __tablename__ = 'Disco'
 
-    id = db.Column('iddisco', db.Integer, primary_key=True)
-    title = db.Column('titulo', db.String(255))
-    year = db.Column('agno', db.Float)
-    idart = db.Column('idinterprete',   db.Integer, db.ForeignKey('interprete.idinterprete'))
+    id = db.Column('IdDisco', db.Integer, primary_key=True)
+    title = db.Column('Titulo', db.String(255))
+    year = db.Column('Agno', db.Float)
+    idart = db.Column('IdInterprete',   db.Integer, db.ForeignKey('Interprete.IdInterprete'))
 
     genre = db.relationship('Genre', secondary=disc_type_table,
-        backref=db.backref('discos', lazy='dynamic'))
+        backref=db.backref('Discos', lazy='dynamic'))
 
     scores = db.relationship('Score', backref='song')
 
@@ -57,22 +57,22 @@ class Song(db.Model):
 
 
 class Score(db.Model):
-    __tablename__ = 'puntuacion'
+    __tablename__ = 'Puntuacion'
 
-    id = db.Column('id', db.Integer, primary_key=True)
-    user_id = db.Column('idcliente', db.Integer, db.ForeignKey('cliente.id'))
-    song_id = db.Column('iddisco', db.Integer, db.ForeignKey('disco.iddisco'))
-    score = db.Column('puntuacion', db.Integer)
-    date = db.Column('fecha', db.DateTime)
+    id = db.Column('Id', db.Integer, primary_key=True)
+    user_id = db.Column('Idcliente', db.Integer, db.ForeignKey('Cliente.id'))
+    song_id = db.Column('Iddisco', db.Integer, db.ForeignKey('Disco.IdDisco'))
+    score = db.Column('Puntuacion', db.Integer)
+    date = db.Column('Fecha', db.DateTime)
 
     user = db.relationship('User')
 
 
 class Genre(db.Model):
-    __tablename__ = 'tipo'
+    __tablename__ = 'Tipo'
 
-    id = db.Column('idtipo', db.Integer, primary_key=True)
-    genre = db.Column('tipo', db.String, unique=True)
+    id = db.Column('IdTipo', db.Integer, primary_key=True)
+    genre = db.Column('Tipo', db.String, unique=True)
 
     def __html__(self):
         return unicode(self.genre)

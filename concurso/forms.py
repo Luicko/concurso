@@ -6,7 +6,7 @@ from wtforms import (StringField, BooleanField, TextField,
 class Regist_Form(Form):
     email = StringField('Email', validators=[validators.DataRequired()])
     nickname = StringField('Nickname', validators=[validators.DataRequired()])
-    birthday = DateField('Birthday')
+    birthday = DateField('Birthday',  format='%m/%d/%Y')
     submit = SubmitField("Sign Up")
 
 

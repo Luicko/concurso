@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+{% set title = "Artists" %}
 <div class="container">
 {% for artist in artists %}
 <div class="modal fade" id="{{ artist.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -13,7 +14,7 @@
 				<table>
 					{% for song in artist.discs %}
 						<tr>
-							<td><a href="{{ url_for('song', id=song.id, songs=song.title) }}">{{ song.title }} </a></td>
+							<td><a href="{{ url_for('song', id=song.id) }}">{{ song.title }} </a></td>
 						</tr>
 					{% endfor %}
 				</table>

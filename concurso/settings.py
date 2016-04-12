@@ -9,4 +9,6 @@ SECRET_KEY = 'you-will-never-guess'
 WTF_CSRF_ENABLED = True
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(_basedir, '../instance/app.db')
+SQLALCHEMY_DATABASE_URI = 'mysql://Concurso:root@localhost/Discos'
+#SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(_basedir, '../instance/app.db')
+

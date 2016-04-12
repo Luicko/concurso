@@ -1,7 +1,7 @@
 import datetime
 import csv
 
-from flask import render_template, redirect, url_for, flash, request, jsonify
+from flask import render_template, redirect, url_for, flash, request, jsonify, g
 from flask.ext.login import (login_user, logout_user, current_user,
     login_required
     )
@@ -10,6 +10,16 @@ from sqlalchemy import select
 from . import app, db
 from .models import *
 from .forms import Regist_Form, Login_Form
+
+@app.before_request
+def before():
+    if current_user.is_authenticated:
+        g.scored = Song.query.join(Score,
+            (Score.song_id==Song.id)).\
+            filter(Score.user_id==current_user.id).\
+            order_by(Song.title).all()
+    else:
+        g.scored = None
 
 
 @app.route('/')
@@ -69,26 +79,44 @@ def artists():
 @app.route('/songs/')
 def songs():
     song_list = Song.query.all()
-    genre_list = Genre.query.all()
     artist_list = Artist.query.all()
-    return render_template('songs.html', song_list=song_list, genre_list=genre_list)
+    return render_template('songs.html', song_list=song_list,
+        artist_list=artist_list)
 
 
 @app.route('/songs/<id>')
 def song(id):
     act_song = Song.query.filter_by(id=id).first()
     year = int(act_song.year)
-    score = 100
+    if current_user.is_authenticated:
+        id_user = current_user.id
+        check = Score.query.filter(Score.user_id==id_user,
+        Score.song_id==id).first()
+        if check:
+            score = check.score
+        else:
+            score = 100
+    else:
+        score = 0
     return render_template('song.html', title=act_song.title, act_song=act_song,
         year=year, score=score)
 
 
 @app.route('/set_score', methods=['GET', 'POST'])
 def set_score():
-    score = request.form.get('rating')
-    song_id = request.form.get('song')
-
-    # XXX: TODO
-    #db.session.commit()
+    score = request.form['score']
+    song_id = request.form['song_id']
+    check = Score.query.filter(Score.user_id==current_user.id,
+    Score.song_id==(song_id)).first()
+    id = current_user.id
+    if check:
+        check.score = score
+        db.session.add(check)
+        db.session.commit()
+    else:
+        add = Score(user_id=id, song_id=int(song_id),
+        score=int(score), date=datetime.datetime.utcnow())
+        db.session.add(add)
+        db.session.commit()
 
     return jsonify({ "result": "OK" })
