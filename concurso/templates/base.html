@@ -6,13 +6,27 @@
 {{ super() }}
   <script src="{{ url_for('.static', filename='js/script.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('.static', filename='js/jquery.dynatable.js') }}"></script>
+  <script type="text/javascript">
+  $(function() {
+         $('#change').click(function(){
+            $.post("{{ url_for('set_font') }}")});
+          });
+  </script>
+
 {% endblock %}
 
 {% block styles %}
 {{ super() }}
   <link rel="stylesheet" href="{{url_for('.static', filename='css/styles.css')}}">
   <link rel="stylesheet" href="{{url_for('.static', filename='css/jquery.dynatable.css')}}">
-  <link rel="stylesheet" href="{{url_for('.static', filename='css/bootstrap.css')}}">
+  <link class="changin" rel="stylesheet" href="{{url_for('.static', filename='css/bootstrap.css')}}">
+  {% if session['font'] != None %}
+  <style type="text/css">
+  *{
+    font-size: {{ session['font'] }}
+  }
+  </style>
+  {% endif %}
 {% endblock %}
 
 {% block head %}
@@ -46,6 +60,13 @@
         <a href="{{ url_for('login') }}"><button type="button" class="btn btn-success">{{ _('Log In') }}</button></a>
       </form>
     {% endif %}
+      <form class="navbar-form navbar-right">
+        <a href="#">
+        <button type="button" id="change" class="btn">
+        Font Size:{{ session['font'] }}
+        </button>
+        </a>
+      </form>
       <ul class="nav navbar-nav navbar-left">
       {% if current_user.is_authenticated %}
         <div id='cssmenu'>
@@ -100,3 +121,5 @@
 
 <br><br><br><br>
 {% endblock %}
+
+<div id="change">bigger text</div>

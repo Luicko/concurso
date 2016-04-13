@@ -2,7 +2,7 @@ import datetime
 
 from flask import render_template, redirect, url_for, flash, request, jsonify, g
 from flask.ext.login import (login_user, logout_user, current_user,
-    login_required
+    login_required, session
     )
 
 from . import app, db, babel
@@ -14,6 +14,7 @@ from settings import LANGUAGES
 @babel.localeselector
 def get_locale():
     return 'es' #request.accept_languages.best_match(LANGUAGES.keys())
+
 
 @app.before_request
 def before():
@@ -53,28 +54,14 @@ def login():
             return redirect(url_for('login'))
         else:
             login_user(u)
+            session['font'] = '18px'
             return redirect(url_for('index'))
     return render_template('login.html', form=form)
 
 
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    form = Regist_Form()
-    if current_user is not None and current_user.is_authenticated:
-        return redirect(url_for('index'))
-    form = Regist_Form()
-    if form.validate_on_submit():
-        u = User(email=form.email.data, name=form.nickname.data, 
-            signindate=datetime.datetime.utcnow(), birthday=form.birthday.data)
-        db.session.add(u)
-        db.session.commit()
-        flash('Welcome!')
-        return redirect(url_for('login'))
-    return render_template('signup.html', form=form, title='Join')
-
-
 @app.route('/logout')
 def logout():
+    session['font'] = '18px'
     logout_user()
     return redirect(url_for('index'))
 
@@ -93,7 +80,7 @@ def song(id):
     Retrieves the an specific song and checks if the current_user
     has rated.
     """
-    song = Song.query.filter_by(id=id).first()
+    song = Song.query.filter_by(id=id).first_or_404()
     year = int(song.year)
     with app.open_resource('static/video/'+str(id)+'.link') as file:
         video = file.read()
@@ -118,7 +105,7 @@ def set_score():
     Inserts a new Score from a user to a song 
     or updates an existing one.
     """
-    score = request.form['score']
+    score = request.form.get('score', 0, type=int)
     song_id = request.form['song_id']
     check = Score.query.filter(Score.user_id==current_user.id,
     Score.song_id==(song_id)).first()
@@ -135,4 +122,16 @@ def set_score():
         db.session.add(add)
         db.session.commit()
 
+    
+
+@app.route('/set_font', methods=['GET', 'POST'])
+def set_font():
+    """
+    Inserts a new Score from a user to a song 
+    or updates an existing one.
+    """
+    if session['font'] == '18px':
+        session['font'] = '24px'
+    else:
+        session['font'] = '18px'
     return jsonify({ "result": "OK" })
