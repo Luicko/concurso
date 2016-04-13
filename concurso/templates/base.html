@@ -64,12 +64,8 @@
         <a href="{{ url_for('login') }}"><button type="button" class="btn btn-primary">{{ _('Log In') }}</button></a>
       </form>
     {% endif %}
-      <form class="navbar-form navbar-right">
-        <a href="#">
-        <button type="button" id="change" class="btn">
-        Font Size:{{ session['font'] }}
-        </button>
-        </a>
+      <form class="navbar-form navbar-right" action="{{ url_for('set_font', next=request.full_path) }}">
+        <input type="submit" value="Font Size:{{ session['font'] }}">
       </form>
       <ul class="nav navbar-nav navbar-left">
       {% if current_user.is_authenticated %}

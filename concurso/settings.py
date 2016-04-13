@@ -1,19 +1,18 @@
-# -*- conding: utf-8 -*-
+# -*- encoding: utf-8 -*-
+
 import os
 
 _basedir = os.path.abspath(os.path.dirname(__file__))
 
-DEBUG=True
+DEBUG = False
 
 SECRET_KEY = 'you-will-never-guess'
+
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 WTF_CSRF_ENABLED = True
 
 LANGUAGES = {
     'en': 'English',
-    'es': 'Spanish'
+    'es': 'Español'
 }
-
-SQLALCHEMY_TRACK_MODIFICATIONS = False
-SQLALCHEMY_DATABASE_URI = 'mysql://Concurso:root@localhost/Discos'
-#SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(_basedir, '../instance/app.db')

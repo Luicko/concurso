@@ -15,19 +15,19 @@ class User(db.Model, UserMixin):
     signindate = db.Column('FechaRegistro', db.DateTime)
 
     def __repr__(self):
-        """
-        Makes a representation for each individual query.
-        """
         return '<User %r>' % (self.name)
 
 
 class Artist(db.Model):
     __tablename__ = 'Interprete'
 
-    name = db.Column('Interprete', db.String(255), index=True)
     id = db.Column('IdInterprete', db.Integer, primary_key=True)
+    name = db.Column('Interprete', db.String(255), index=True)
 
     discs = db.relationship('Song', backref='author', lazy='dynamic')
+
+    def __html__(self):
+        return unicode(self.name)
 
     def __repr__(self):
         return '<Artist %r>' % self.name
@@ -45,12 +45,12 @@ class Song(db.Model):
     id = db.Column('IdDisco', db.Integer, primary_key=True)
     title = db.Column('Titulo', db.String(255))
     year = db.Column('Agno', db.Float)
-    idart = db.Column('IdInterprete',   db.Integer, db.ForeignKey('Interprete.IdInterprete'))
+    artist_id = db.Column('IdInterprete', db.Integer, db.ForeignKey('Interprete.IdInterprete'))
 
+    artist = db.relationship('Artist', uselist=False)
+    scores = db.relationship('Score', backref='song')
     genre = db.relationship('Genre', secondary=disc_type_table,
         backref=db.backref('Discos', lazy='dynamic'))
-
-    scores = db.relationship('Score', backref='song')
 
     def __repr__(self):
         return '<Disco %r>' % self.title

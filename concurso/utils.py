@@ -1,42 +1,35 @@
-import csv
+from urlparse import urlparse, urljoin
+from flask import request, url_for, redirect
 
-from . import app, db
-from .models import User, Songs, Artist
-
-
-def follow(Artist, usuario):
-	follow_file = open('/following/',usuario.id,'.csv','a')
-	follow_file.write("",Artist.id," ")
-	follow_file.close()
-
-def unfollow(usuario, Artist):
-	following = read_follow(usuario)
-	following.remove(str(Artist))
-	os.remove('',usuario.id,'.csv')
-	follow_file = open('/following/',usuario.id,'.csv','a')
-	for x in range(len(following)):
-		follow_file.write("",following[x]," ")
-	follow_file.close()
+from flask.ext.wtf import Form
+from wtforms import TextField, HiddenField
 
 
-def read_follow(usuario):
-	follow = []
-	try:
-		with open('/following/',usuario.id,'.csv', 'rb') as csvfile:
-			spamreader = csv.reader(csvfile, delimiter= ' ')
-			for row in spamreader:
-				follow = row
-		return follow
-	except IOError:
-		return None
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and \
+           ref_url.netloc == test_url.netloc
 
-def set_score(user, score, disc):
-	x = models.Puntuacion.query.filter(idUser=user.id, idSongs=disc.id).first()
-	if x:
-		j = x(Puntuacion=score)
-		db.session.add(j)
-		db.session.commit()
-	else:
-		x = models.Puntuacion(idUser=user.id, idSongs=disc.id, puntuacion=score)
-		db.session.add(x)
-		db.session.commit()
+
+def get_redirect_target():
+    for target in request.args.get('next'), request.referrer:
+        if not target:
+            continue
+        if is_safe_url(target):
+            return target
+
+
+class RedirectForm(Form):
+    next = HiddenField()
+
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
+        if not self.next.data:
+            self.next.data = get_redirect_target() or ''
+
+    def redirect(self, endpoint='index', **values):
+        if is_safe_url(self.next.data):
+            return redirect(self.next.data)
+        target = get_redirect_target()
+        return redirect(target or url_for(endpoint, **values))

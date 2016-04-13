@@ -29,10 +29,10 @@
       </tr>
     </thead>
   <tbody>
-  {% for song in song_list %}
+  {% for song in songs %}
     <tr>
       <td><a href="{{ url_for('song', id=song.id) }}">{{ song.title }} <span class="glyphicon glyphicon-cd" aria-hidden="true"></span></a></td>
-      {% for artist in artist_list %}
+      {% for artist in artists %}
       {% if artist.id == song.idart %}
       <td>{{ artist.name }}</td>
       {% endif %}
