@@ -36,4 +36,7 @@ from . import views, models
 
 @lm.user_loader
 def load_user(id):
+	"""
+	Gets the id of the current user.
+	"""
 	return models.User.query.get(int(id))

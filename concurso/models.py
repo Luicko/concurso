@@ -15,6 +15,9 @@ class User(db.Model, UserMixin):
     signindate = db.Column('FechaRegistro', db.DateTime)
 
     def __repr__(self):
+        """
+        Makes a representation for each individual query.
+        """
         return '<User %r>' % (self.name)
 
 

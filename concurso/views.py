@@ -13,7 +13,7 @@ from settings import LANGUAGES
 
 @babel.localeselector
 def get_locale():
-    return 'es' #request.accept_languages.best_match(LANGUAGES.keys())
+    return request.accept_languages.best_match(LANGUAGES.keys())
 
 
 @app.before_request
@@ -50,7 +50,6 @@ def login():
     if form.validate_on_submit():
         u = User.query.filter_by(email=form.email.data).first()
         if not u:
-            flash('Couldn\'t log in')
             return redirect(url_for('login'))
         else:
             login_user(u)
@@ -61,6 +60,9 @@ def login():
 
 @app.route('/logout')
 def logout():
+    """
+    Logs the user out and restores the font size
+    """
     session['font'] = '18px'
     logout_user()
     return redirect(url_for('index'))
@@ -68,6 +70,9 @@ def logout():
 
 @app.route('/songs/')
 def songs():
+    """
+    List out all the songs and artists in the database
+    """
     song_list = Song.query.all()
     artist_list = Artist.query.all()
     return render_template('songs.html', song_list=song_list,
@@ -77,8 +82,8 @@ def songs():
 @app.route('/songs/<id>')
 def song(id):
     """
-    Retrieves the an specific song and checks if the current_user
-    has rated.
+    Retrieves an specific song and checks if the current_user
+    has rated it or not.
     """
     artist_list = Artist.query.all()
     song = Song.query.filter_by(id=id).first_or_404()
@@ -104,7 +109,7 @@ def song(id):
 @app.route('/set_score', methods=['GET', 'POST'])
 def set_score():
     """
-    Inserts a new Score from a user to a song 
+    Inserts applies a score from a user to a song 
     or updates an existing one.
     """
     score = request.form.get('score', 0, type=int)
@@ -130,8 +135,7 @@ def set_score():
 @app.route('/set_font', methods=['GET', 'POST'])
 def set_font():
     """
-    Inserts a new Score from a user to a song 
-    or updates an existing one.
+    Changes the font of the entire website.
     """
     if session['font'] == '18px':
         session['font'] = '24px'
