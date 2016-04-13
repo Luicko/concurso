@@ -17,6 +17,9 @@ def get_locale():
 
 @app.before_request
 def before():
+    """
+    Creates a list from all the songs that the current_user has rated.
+    """
     from string import ascii_uppercase
     g.alphabet = ascii_uppercase
     if current_user.is_authenticated:
@@ -32,9 +35,9 @@ def before():
 @app.route('/index')
 def index():
     import random
-    news = Song.query.all()
-    random.shuffle(news)
-    slide = news[0:7]
+    query = Song.query.all()
+    random.shuffle(query)
+    slide = query[0:7]
     return render_template('index.html', slide=slide)
 
 
@@ -46,7 +49,7 @@ def login():
     if form.validate_on_submit():
         u = User.query.filter_by(email=form.email.data).first()
         if not u:
-            flash('Error al iniciar sesion')
+            flash('Couldn\'t log in')
             return redirect(url_for('login'))
         else:
             login_user(u)
@@ -86,8 +89,12 @@ def songs():
 
 @app.route('/songs/<id>')
 def song(id):
-    act_song = Song.query.filter_by(id=id).first()
-    year = int(act_song.year)
+    """
+    Retrieves the an specific song and checks if the current_user
+    has rated.
+    """
+    song = Song.query.filter_by(id=id).first()
+    year = int(song.year)
     with app.open_resource('static/video/'+str(id)+'.link') as file:
         video = file.read()
     if current_user.is_authenticated:
@@ -100,24 +107,30 @@ def song(id):
             score = 100
     else:
         score = 0
-    return render_template('song.html', title=act_song.title,
-        act_song=act_song, year=year,
+    return render_template('song.html', title=song.title,
+        song=song, year=year,
         score=score, video=video)
 
 
 @app.route('/set_score', methods=['GET', 'POST'])
 def set_score():
+    """
+    Inserts a new Score from a user to a song 
+    or updates an existing one.
+    """
     score = request.form['score']
     song_id = request.form['song_id']
     check = Score.query.filter(Score.user_id==current_user.id,
     Score.song_id==(song_id)).first()
-    id = current_user.id
+    id_user = current_user.id
     if check:
         check.score = score
         db.session.add(check)
         db.session.commit()
     else:
-        add = Score(user_id=id, song_id=int(song_id),
+        query = Score.query.order_by(Score.id.desc()).first()
+        last = int(query.id) + 1
+        add = Score(id=last, user_id=id_user, song_id=int(song_id),
         score=int(score), date=datetime.datetime.utcnow())
         db.session.add(add)
         db.session.commit()

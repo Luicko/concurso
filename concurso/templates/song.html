@@ -9,7 +9,7 @@
      $(function() {
          $('input[name=rating]').change(function(){
             $.post("{{ url_for('set_score') }}", {
-                song_id: {{ act_song.id }},
+                song_id: {{ song.id }},
                 score: $(this).val()
             });
          });
@@ -22,12 +22,12 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6">
-            <h2>{{ act_song.title }}<small> - {{ year }}</small></h2>
+            <h2>{{ song.title }}<small> - {{ year }}</small></h2>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
-          <img id="slider" class="img-thumbnail" src="{{ url_for('.static', filename='media/') }}{{ act_song.id }}.jpg">
+          <img id="slider" class="img-thumbnail" src="{{ url_for('.static', filename='media/') }}{{ song.id }}.jpg">
         </div>
           <div class="col-md-4 col-md-offset-3">
             <div class="embed-responsive embed-responsive-4by3">
