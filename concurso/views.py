@@ -4,7 +4,6 @@ from flask import render_template, redirect, url_for, flash, request, jsonify, g
 from flask.ext.login import (login_user, logout_user, current_user,
     login_required
     )
-from sqlalchemy import select
 
 from . import app, db, babel
 from .models import *
@@ -14,7 +13,7 @@ from settings import LANGUAGES
 
 @babel.localeselector
 def get_locale():
-	return 'en' #request.accept_languages.best_match(LANGUAGES.keys())
+    return 'es' #request.accept_languages.best_match(LANGUAGES.keys())
 
 @app.before_request
 def before():
@@ -77,12 +76,6 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/artist/')
-def artists():
-    artists = Artist.query.order_by(Artist.name)
-    return render_template('artists.html', artists=artists)
-
-
 @app.route('/songs/')
 def songs():
     song_list = Song.query.all()
@@ -107,8 +100,9 @@ def song(id):
             score = 100
     else:
         score = 0
-    return render_template('song.html', title=act_song.title, act_song=act_song,
-        year=year, score=score, video=video)
+    return render_template('song.html', title=act_song.title,
+        act_song=act_song, year=year,
+        score=score, video=video)
 
 
 @app.route('/set_score', methods=['GET', 'POST'])

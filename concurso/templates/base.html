@@ -4,22 +4,22 @@
 
 {% block scripts %} 
 {{ super() }}
-<script src="{{ url_for('.static', filename='js/script.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('.static', filename='js/jquery.dynatable.js') }}"></script>
+  <script src="{{ url_for('.static', filename='js/script.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('.static', filename='js/jquery.dynatable.js') }}"></script>
 {% endblock %}
 
 {% block styles %}
 {{ super() }}
-<link rel="stylesheet" href="{{url_for('.static', filename='css/styles.css')}}">
-<link rel="stylesheet" href="{{url_for('.static', filename='css/jquery.dynatable.css')}}">
-<link rel="stylesheet" href="{{url_for('.static', filename='css/bootstrap.css')}}">
+  <link rel="stylesheet" href="{{url_for('.static', filename='css/styles.css')}}">
+  <link rel="stylesheet" href="{{url_for('.static', filename='css/jquery.dynatable.css')}}">
+  <link rel="stylesheet" href="{{url_for('.static', filename='css/bootstrap.css')}}">
 {% endblock %}
 
 {% block head %}
 {{ super() }}
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 {% endblock %}
 
 {% block navbar %}
@@ -98,5 +98,5 @@
   </div><!-- /.container-fluid -->
 </nav>
 
-<br><br><br><br><br>
+<br><br><br><br>
 {% endblock %}

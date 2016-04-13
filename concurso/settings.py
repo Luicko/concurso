@@ -11,7 +11,7 @@ WTF_CSRF_ENABLED = True
 
 LANGUAGES = {
     'en': 'English',
-    'es': 'Espanol'
+    'es': 'Spanish'
 }
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False

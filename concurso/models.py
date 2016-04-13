@@ -27,7 +27,7 @@ class Artist(db.Model):
     discs = db.relationship('Song', backref='author', lazy='dynamic')
 
     def __repr__(self):
-    	return '<Artist %r>' % self.name
+        return '<Artist %r>' % self.name
 
 
 disc_type_table = db.Table('DiscoTipo',
@@ -70,9 +70,6 @@ class Genre(db.Model):
 
     id = db.Column('IdTipo', db.Integer, primary_key=True)
     genre = db.Column('Tipo', db.String, unique=True)
-
-    def __html__(self):
-        return unicode(self.genre)
 
     def __repr__(self):
         return "<{} '{}'>".format(self.__class__.__name__, self.genre)

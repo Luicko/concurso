@@ -15,29 +15,29 @@
 {% block content %}
 {% set title = "Songs" %}
 <div class="container">
-<table id="table-songs" class="table table-bordered">
-<thead>
-<tr>
-    <th>
-      {{ _('Songs') }}
-    </th>
-    <th>
-    	{{ _('Artist') }}
-    </th>
-</tr>
-</thead>
-<tbody>
-{% for song in song_list %}
-<tr>
-	<td><a href="{{ url_for('song', id=song.id) }}">{{ song.title }}</a></td>
-	{% for artist in artist_list %}
-	{% if artist.id == song.idart %}
-	<td>{{ artist.name }}</td>
-	{% endif %}
-	{% endfor %}
-</tr>
-{% endfor %}
-</tbody>
-</table>
+  <table id="table-songs" class="table table-bordered">
+    <thead>
+      <tr>
+        <th>
+          {{ _('Songs') }}
+        </th>
+        <th>
+          {{ _('Artist') }}
+        </th>
+      </tr>
+    </thead>
+  <tbody>
+  {% for song in song_list %}
+    <tr>
+      <td><a href="{{ url_for('song', id=song.id) }}">{{ song.title }}</a></td>
+      {% for artist in artist_list %}
+      {% if artist.id == song.idart %}
+      <td>{{ artist.name }}</td>
+      {% endif %}
+      {% endfor %}
+    </tr>
+  {% endfor %}
+  </tbody>
+  </table>
 </div>
 {% endblock %}
