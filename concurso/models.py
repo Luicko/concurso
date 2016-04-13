@@ -17,12 +17,6 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return '<User %r>' % (self.name)
 
-    def follow(self, interprete):
-        pass
-
-    def unfollow(self, interprete):
-        pass
-
 
 class Artist(db.Model):
     __tablename__ = 'Interprete'
@@ -31,6 +25,9 @@ class Artist(db.Model):
     id = db.Column('IdInterprete', db.Integer, primary_key=True)
 
     discs = db.relationship('Song', backref='author', lazy='dynamic')
+
+    def __repr__(self):
+    	return '<Artist %r>' % self.name
 
 
 disc_type_table = db.Table('DiscoTipo',

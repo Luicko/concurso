@@ -1,5 +1,4 @@
 import datetime
-import csv
 
 from flask import render_template, redirect, url_for, flash, request, jsonify, g
 from flask.ext.login import (login_user, logout_user, current_user,
@@ -7,12 +6,20 @@ from flask.ext.login import (login_user, logout_user, current_user,
     )
 from sqlalchemy import select
 
-from . import app, db
+from . import app, db, babel
 from .models import *
 from .forms import Regist_Form, Login_Form
+from settings import LANGUAGES
+
+
+@babel.localeselector
+def get_locale():
+	return 'en' #request.accept_languages.best_match(LANGUAGES.keys())
 
 @app.before_request
 def before():
+    from string import ascii_uppercase
+    g.alphabet = ascii_uppercase
     if current_user.is_authenticated:
         g.scored = Song.query.join(Score,
             (Score.song_id==Song.id)).\
@@ -88,6 +95,8 @@ def songs():
 def song(id):
     act_song = Song.query.filter_by(id=id).first()
     year = int(act_song.year)
+    with app.open_resource('static/video/'+str(id)+'.link') as file:
+        video = file.read()
     if current_user.is_authenticated:
         id_user = current_user.id
         check = Score.query.filter(Score.user_id==id_user,
@@ -99,7 +108,7 @@ def song(id):
     else:
         score = 0
     return render_template('song.html', title=act_song.title, act_song=act_song,
-        year=year, score=score)
+        year=year, score=score, video=video)
 
 
 @app.route('/set_score', methods=['GET', 'POST'])

@@ -12,6 +12,7 @@
 {{ super() }}
 <link rel="stylesheet" href="{{url_for('.static', filename='css/styles.css')}}">
 <link rel="stylesheet" href="{{url_for('.static', filename='css/jquery.dynatable.css')}}">
+<link rel="stylesheet" href="{{url_for('.static', filename='css/bootstrap.css')}}">
 {% endblock %}
 
 {% block head %}
@@ -38,11 +39,11 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     {% if current_user.is_authenticated %}
       <form class="navbar-form navbar-right" role="search">
-        <a href="{{ url_for('logout') }}"><button type="button" class="btn btn-default">Log Out</button></a>
+        <a href="{{ url_for('logout') }}"><button type="button" class="btn btn-danger">{{ _('Log Out') }}</button></a>
       </form>
       {% else %}
       <form class="navbar-form navbar-right" role="search">
-        <a href="{{ url_for('login') }}"><button type="button" class="btn btn-default">Log In</button></a>
+        <a href="{{ url_for('login') }}"><button type="button" class="btn btn-success">{{ _('Log In') }}</button></a>
       </form>
     {% endif %}
       <ul class="nav navbar-nav navbar-left">
@@ -51,30 +52,35 @@
         <ul class="active">
            <li class='has-sub'><a href='#'>{{ current_user.name }}</a>
               <ul>
-                 <li class='has-sub'><a href=''>Following</a>
+                 <li class='has-sub'><a href=''>{{ _('Rated') }}</a>
                     <ul>
-                    {% for song in g.scored %}
                     <li class='has-sub'><a href='#'>A-F</a>
-                    <ul>{% for x in range(5) %}
+                    <ul>{% for song in g.scored %}
+                    {% if song.title[0] in g.alphabet[0:6] %}
                       <li><a href="{{ url_for('song', id=song.id) }}">{{ song.title }} <span class="glyphicon glyphicon-heart" aria-hidden="true"></span></a></li>
+                    {% endif %}
                     {% endfor %}</ul>
                     </li>
                     <li class='has-sub'><a href='#'>G-M</a>
-                    <ul>{% for x in range(5) %}
+                    <ul>
+                    {% for song in g.scored %}{% if song.title[0] in g.alphabet[7:13] %}
                       <li><a href="{{ url_for('song', id=song.id) }}">{{ song.title }} <span class="glyphicon glyphicon-heart" aria-hidden="true"></span></a></li>
+                    {% endif %}
                     {% endfor %}</ul>
                     </li>
                     <li class='has-sub'><a href='#'>N-S</a>
-                    <ul>{% for x in range(5) %}
-                      <li><a href="{{ url_for('song', id=song.id) }}">{{ song.title }} <span class="glyphicon glyphicon-heart" aria-hidden="true"></span></a></li>
-                    {% endfor %}</ul>
-                    </li>{% for x in range(5) %}
-                    <li class='has-sub'><a href='#'>U-Z</a>
                     <ul>
+                    {% for song in g.scored %}{% if song.title[0] in g.alphabet[14:20] %}
                       <li><a href="{{ url_for('song', id=song.id) }}">{{ song.title }} <span class="glyphicon glyphicon-heart" aria-hidden="true"></span></a></li>
+                    {% endif %}
                     {% endfor %}</ul>
                     </li>
-                    {% endfor %}
+                    <li class='has-sub'><a href='#'>U-Z</a>
+                    <ul>{% for song in g.scored %}{% if song.title[0] in g.alphabet[20:26] %}
+                      <li><a href="{{ url_for('song', id=song.id) }}">{{ song.title }} <span class="glyphicon glyphicon-heart" aria-hidden="true"></span></a></li>
+                    {% endif %}
+                    {% endfor %}</ul>
+                    </li>
                  </li>
                     </ul>
                  </li>
@@ -85,12 +91,12 @@
         {% endif %}
       </ul>
       <ul class="nav navbar-nav">
-        <li><a href="{{ url_for('index') }}">Home<span class="sr-only"></span></a></li>
-        <li><a href="{{ url_for('songs') }}">Songs<span class="sr-only"></span></a></li>
+        <li><a href="{{ url_for('index') }}">{{ _('Home') }}<span class="sr-only"></span></a></li>
+        <li><a href="{{ url_for('songs') }}">{{ _('Songs') }}<span class="sr-only"></span></a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
 
-<br><br><br><br><br><br>
+<br><br><br><br><br>
 {% endblock %}

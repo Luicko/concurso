@@ -1,3 +1,4 @@
+#-*- conding: utf-8 -*-
 import os
 
 from flask import Flask
@@ -6,10 +7,11 @@ from flask.ext.login import LoginManager
 from flask_bootstrap import Bootstrap
 from flask_debugtoolbar import DebugToolbarExtension
 from flask.ext.mysql import MySQL
+from flask.ext.babel import Babel
 
 app = Flask(__name__)
 app.config.from_object('concurso.settings')
-
+babel = Babel(app)
 db = SQLAlchemy(app)
 #db = MySQL()
 #app.config['MYSQL_DATABASE_USER'] = 'Concurso'
