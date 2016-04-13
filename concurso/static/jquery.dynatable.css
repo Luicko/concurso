@@ -16,10 +16,6 @@ th a:hover {
   text-decoration: underline;
 }
 
-th{
-  background-color: #000033;
-}
-
 .dynatable-search {
   float: right;
   margin-bottom: 10px;

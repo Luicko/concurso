@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% set title = "Songs" %}
 {% block scripts %}
 {{ super() }}
     <script type='text/javascript'>
@@ -13,8 +13,10 @@
 {% endblock %}
 
 {% block content %}
-{% set title = "Songs" %}
 <div class="container">
+  <div class="page-header">
+    <h2>{{ _('Search for your favorite song or artist!') }}</h2>
+  </div>
   <table id="table-songs" class="table table-bordered">
     <thead>
       <tr>
@@ -29,7 +31,7 @@
   <tbody>
   {% for song in song_list %}
     <tr>
-      <td><a href="{{ url_for('song', id=song.id) }}">{{ song.title }}</a></td>
+      <td><a href="{{ url_for('song', id=song.id) }}">{{ song.title }} <span class="glyphicon glyphicon-cd" aria-hidden="true"></span></a></td>
       {% for artist in artist_list %}
       {% if artist.id == song.idart %}
       <td>{{ artist.name }}</td>

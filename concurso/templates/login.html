@@ -1,5 +1,6 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
+{% set title = "Log In" %}
 {% block content %}
 {% set title = "Log In" %}
 <div class="container">
@@ -8,7 +9,7 @@
       <div class="page-header">
         <h1>{{ _('Login') }}</h1>
       </div>
-      {{ wtf.quick_form(form, button_map={'submit': 'info'}) }}
+      {{ wtf.quick_form(form, button_map={'submit': 'primary'}) }}
     </div>
   </div>
 </div>

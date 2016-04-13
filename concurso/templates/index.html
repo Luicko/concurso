@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% set title='Main' %}
 {% block content %}
   <div class="container">
     <div class="row">
       <div class="page-header">
-        <h2>{{ _('What\'s ON in the music world right now!') }}</h2>
+        <h2>{{ _('What\'s (or was) ON in the music world right now!') }}</h2>
       </div>
     </div>
   <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
@@ -18,9 +19,8 @@
     <!-- Wrapper for slides -->
     <div class="carousel-inner" role="listbox">
       <div class="item active">
-        <img alt="" src="http://christianleadershipradio.com/wp-content/uploads/2013/05/holywood-255x255.jpg" data-holder-rendered="true">
+        <img id="slider2" alt="" src="{{ url_for('.static', filename='media/slider.jpg') }}" data-holder-rendered="true">
         <div class="carousel-caption">
-          HOLA
         </div>
       </div>
       {% for item in slide %}
@@ -45,5 +45,4 @@
   
   </div>
   </div>
-  {% endif %}
 {% endblock %}

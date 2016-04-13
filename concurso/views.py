@@ -80,6 +80,7 @@ def song(id):
     Retrieves the an specific song and checks if the current_user
     has rated.
     """
+    artist_list = Artist.query.all()
     song = Song.query.filter_by(id=id).first_or_404()
     year = int(song.year)
     with app.open_resource('static/video/'+str(id)+'.link') as file:
@@ -96,7 +97,8 @@ def song(id):
         score = 0
     return render_template('song.html', title=song.title,
         song=song, year=year,
-        score=score, video=video)
+        score=score, video=video,
+        artist_list=artist_list)
 
 
 @app.route('/set_score', methods=['GET', 'POST'])
@@ -121,6 +123,7 @@ def set_score():
         score=int(score), date=datetime.datetime.utcnow())
         db.session.add(add)
         db.session.commit()
+    return jsonify({ "result": "OK" })
 
     
 
