@@ -52,7 +52,7 @@ def login():
 
         login_user(user)
 
-        session['font'] = '18px'    # XXX: Check for alternative
+        session['font'] = '17px'    # XXX: Check for alternative
 
         flash(_('Welcome <b>%(email)s</b>!', email=user.email), 'success')
 
@@ -63,7 +63,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session['font'] = '18px'
+    session['font'] = '17px'
     logout_user()
     return redirect(url_for('index'))
 
@@ -134,8 +134,17 @@ def set_font():
     Changes the font of the entire website.
     """
     next = get_redirect_target()
-    if session['font'] == '18px':
-        session['font'] = '24px'
+    if session['font'] == '17px':
+        session['font'] = '22px'
     else:
-        session['font'] = '18px'
+        session['font'] = '17px'
     return redirect(next)
+
+
+@app.route('/tutorial')
+def tutorial():
+    return render_template('tutorial.html')
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
