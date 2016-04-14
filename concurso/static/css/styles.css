@@ -196,3 +196,10 @@ body {
   height: 25px;
   background-color: #f5f5f5;
 }
+
+#VirtualKey{
+  display: none;
+  width: 300px;
+  height: 200px;
+  text-align: center;
+}

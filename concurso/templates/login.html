@@ -1,5 +1,24 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
+{% block scripts %}
+{{ super() }}
+    <script type='text/javascript'>
+
+     function input(e) {
+    var tbInput = document.getElementById("tbInput");
+    tbInput.value = tbInput.value + e.value;
+}
+ 
+  function del() {
+    var tbInput = document.getElementById("tbInput");
+    tbInput.value = tbInput.value.substr(0, tbInput.value.length - 1);
+}
+$("#tbInput").click(function(){
+    $("#VirtualKey").toggle(1000);
+});
+
+    </script>
+{% endblock %}
 {% set title = "Log In" %}
 {% block content %}
 {% set title = "Log In" %}
@@ -9,7 +28,39 @@
       <div class="page-header">
         <h1>{{ _('Login') }}</h1>
       </div>
-      {{ wtf.quick_form(form, button_map={'submit': 'primary'}) }}
+      <form action='' method='post'>
+        {{ form.hidden_tag() }}
+        <div><label class='control-label'>Email:</label> {{ form.email(class='form-control') }}</div>
+        <div><label class='control-label'>Password:</label> {{ form.password(class='form-control', id='tbInput', readonly=True) }}</div><br>
+        <div id="VirtualKey">
+    <table class='table table-bordered'>
+    <tr>
+        <td><input class='btn' id="btn1" type="button" onclick="input(this);" value='1' /></td>
+        <td><input class='btn' id="btn2" type="button" onclick="input(this);" value='2' /></td>
+        <td><input class='btn' id="btn3" type="button" onclick="input(this);" value='3' /></td>
+     </tr>
+     <tr>
+        <td><input class='btn' id="btn4" type="button" onclick="input(this);" value='4' /></td>
+        <td><input class='btn' id="btn5" type="button" onclick="input(this);" value='5' /></td>
+        <td><input class='btn' id="btn6" type="button" onclick="input(this);" value='6' /></td>
+     </tr>
+     <tr>
+        <td><input class='btn' id="btn7" type="button" onclick="input(this);" value='7' /></td>
+        <td><input class='btn' id="btn8" type="button" onclick="input(this);" value='8' /></td>
+        <td><input class='btn' id="btn9" type="button" onclick="input(this);" value='9' /></td>
+     </tr>
+     <tr>
+        <td><input class='btn' id="btn0" type="button" onclick="input(this)"  value='0'/></td>
+        <td><input class='btn' id="btnDel" type="button" value="Backspace" onclick="del();" /></td>
+     </tr>
+     </table>
+    </div><br>
+    <div>{{ form.submit(class='btn btn-primary') }}</div>
+
+      </form>
+      <div class='col-sm-8'>
+      	<h4>Don't have an account yet?</h4><a href="{{ url_for('regist') }}"><button type="button" class="btn btn-lg">{{ _('Sign In') }}</button></a>
+      </div>
     </div>
   </div>
 </div>

@@ -8,7 +8,7 @@ from flask.ext.babel import gettext as _
 
 from . import app, db, babel
 from .models import *
-from .forms import LoginForm
+from .forms import LoginForm, RegistrationForm
 from .utils import get_redirect_target
 
 
@@ -39,26 +39,37 @@ def index():
 
     return render_template('index.html', slide=slide)
 
-
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/sign in', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
-
     form = LoginForm()
-
     if form.validate_on_submit():
-        user = form._user
+        u = User.query.filter_by(email=form.email.data).first()
+        if not u:
+            flash('Error al iniciar sesion')
+            return redirect(url_for('login'))
+        elif u.password == form.password.data:
+            session['font'] = '17px'    # XXX: Check for alternative
+            login_user(u)
+            return redirect(url_for('index'))
+    return render_template('login.html', form=form, title='Sign In')
 
-        login_user(user)
 
-        session['font'] = '17px'    # XXX: Check for alternative
 
-        flash(_('Welcome <b>%(email)s</b>!', email=user.email), 'success')
-
+@app.route('/signup', methods=['GET', 'POST'])
+def regist():
+    if current_user.is_authenticated:
         return redirect(url_for('index'))
-
-    return render_template('login.html', form=form)
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        u = User(email=form.email.data, name=form.nickname.data, 
+            password=form.password.data, birthday=form.birthday.data, signindate=datetime.datetime.utcnow())
+        db.session.add(u)
+        db.session.commit()
+        flash('Thank you for joinin!!')
+        return redirect(url_for('login'))
+    return render_template('signup.html', form=form, title='Sign Up')
 
 
 @app.route('/logout')

@@ -13,6 +13,7 @@ class User(db.Model, UserMixin):
     email = db.Column('Email', db.String(255), index=True, unique=True)
     birthday = db.Column('FechaNacimiento', db.DateTime)
     signindate = db.Column('FechaRegistro', db.DateTime)
+    password = db.Column('Contrasenia', db.String(255))
 
     def __repr__(self):
         return '<User %r>' % (self.name)
