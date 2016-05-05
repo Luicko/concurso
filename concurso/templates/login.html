@@ -1,24 +1,5 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
-{% block scripts %}
-{{ super() }}
-    <script type='text/javascript'>
-
-     function input(e) {
-    var tbInput = document.getElementById("tbInput");
-    tbInput.value = tbInput.value + e.value;
-}
- 
-  function del() {
-    var tbInput = document.getElementById("tbInput");
-    tbInput.value = tbInput.value.substr(0, tbInput.value.length - 1);
-}
-$("#tbInput").click(function(){
-    $("#VirtualKey").toggle(1000);
-});
-
-    </script>
-{% endblock %}
 {% set title = "Log In" %}
 {% block content %}
 {% set title = "Log In" %}
@@ -31,8 +12,8 @@ $("#tbInput").click(function(){
       <form action='' method='post'>
         {{ form.hidden_tag() }}
         <div><label class='control-label'>Email:</label> {{ form.email(class='form-control') }}</div>
-        <div><label class='control-label'>Password:</label> {{ form.password(class='form-control', id='tbInput', readonly=True) }}</div><br>
-        <div id="VirtualKey">
+        <div><label class='control-label'>Password:</label> {{ form.password(class='form-control', id='keypass', readonly=True) }}</div><br>
+        <div id="virtualkey">
     <table class='table table-bordered'>
     <tr>
         <td><input class='btn' id="btn1" type="button" onclick="input(this);" value='1' /></td>
@@ -57,7 +38,7 @@ $("#tbInput").click(function(){
     </div><br>
     <div>{{ form.submit(class='btn btn-primary') }}</div>
 
-      </form>
+    </form>
       <div class='col-sm-8'>
       	<h4>Don't have an account yet?</h4><a href="{{ url_for('regist') }}"><button type="button" class="btn btn-lg">{{ _('Sign In') }}</button></a>
       </div>

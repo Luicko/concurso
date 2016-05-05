@@ -21,3 +21,16 @@ $('#cssmenu li.active').addClass('open').children('ul').show();
     });
 });
 })(jQuery);
+
+     function input(e) {
+    var keypass = document.getElementById("keypass");
+    keypass.value = keypass.value + e.value;
+}
+ 
+    function del() {
+    var keypass = document.getElementById("keypass");
+    keypass.value = keypass.value.substr(0, keypass.value.length - 1);
+}
+$("#keypass").click(function(){
+    $("#virtualkey").toggle(1000);
+});

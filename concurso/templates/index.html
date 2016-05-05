@@ -44,13 +44,5 @@
     </a>
   
   </div>
-  {% if current_user.is_authenticated %}
-  {% else %}
-  <div class='row'>
-  <div class='col-md-4'>
-  <a href="{{ url_for('regist') }}"><button type="button" class="btn btn-lg">{{ _('Sign In') }}</button></a>
-  </div>    
-  </div>
-  {% endif %}
   </div>
 {% endblock %}

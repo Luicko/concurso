@@ -5,6 +5,9 @@ from flask import (render_template, redirect, url_for,
 from flask.ext.login import (login_user, logout_user, current_user,
     login_required, session)
 from flask.ext.babel import gettext as _
+from werkzeug.security import generate_password_hash, \
+     check_password_hash
+from sqlalchemy import func
 
 from . import app, db, babel
 from .models import *
@@ -49,7 +52,7 @@ def login():
         if not u:
             flash('Error al iniciar sesion')
             return redirect(url_for('login'))
-        elif u.password == form.password.data:
+        elif check_password_hash(u.password, form.password.data):
             session['font'] = '17px'    # XXX: Check for alternative
             login_user(u)
             return redirect(url_for('index'))
@@ -64,7 +67,7 @@ def regist():
     form = RegistrationForm()
     if form.validate_on_submit():
         u = User(email=form.email.data, name=form.nickname.data, 
-            password=form.password.data, birthday=form.birthday.data, signindate=datetime.datetime.utcnow())
+            password=generate_password_hash(form.password.data), birthday=form.birthday.data, signindate=datetime.datetime.utcnow())
         db.session.add(u)
         db.session.commit()
         flash('Thank you for joinin!!')
@@ -74,8 +77,8 @@ def regist():
 
 @app.route('/logout')
 def logout():
-    session['font'] = '17px'
     logout_user()
+    session.clear()
     return redirect(url_for('index'))
 
 
@@ -159,3 +162,19 @@ def tutorial():
 @app.errorhandler(404)
 def not_found_error(error):
     return render_template('404.html'), 404
+
+@app.route('/most rated')
+def most_rated():
+    bars = []
+    songs = []
+    group = x = db.session.query(func.sum(Score.score),\
+        Score.song_id).group_by(Score.song_id).\
+        order_by(func.sum(Score.score).desc()).limit(5)
+    top = group[0]
+    for song in group[1:4]:
+        width = str(((int(song[0])*80)/int(top[0])))+'%'
+        bars.append((width, song[1]))
+    for song in group:
+        new = Song.query.filter(Song.id==song[1]).first()
+        songs.append(new)
+    return render_template('top.html', top=top, group=group, bars=bars, songs=songs) 

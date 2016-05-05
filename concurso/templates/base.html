@@ -62,7 +62,9 @@
       {% else %}
       <form class="navbar-form navbar-right" role="search">
         <a href="{{ url_for('login') }}"><button type="button" class="btn btn-primary">{{ _('Log In') }}</button></a>
+        <a href="{{ url_for('regist') }}"><button type="button" class="btn btn-warning">{{ _('Sign In') }}</button></a>
       </form>
+
     {% endif %}
       <form class="navbar-form navbar-right" action="{{ url_for('set_font', next=request.full_path) }}">
         <input type="submit" value="Font Size:{{ session['font'] }}">
@@ -114,12 +116,13 @@
       <ul class="nav navbar-nav">
         <li><a href="{{ url_for('index') }}">{{ _('Home') }}<span class="sr-only"></span></a></li>
         <li><a href="{{ url_for('songs') }}">{{ _('Songs') }}<span class="sr-only"></span></a></li>
+        <li><a href="{{ url_for('most_rated') }}">{{ _('Top Songs') }}<span class="sr-only"></span></a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
 
-<br><br>
+<br><br><br>
 <footer class="footer">
 <div  class="container">
 <p class='hidden-sm hidden-xs'>Maded by: Luis E. Galindo M. - 2016/Skill contest</p>
